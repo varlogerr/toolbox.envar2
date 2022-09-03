@@ -1,0 +1,2 @@
+SUBSUB11_VAR=subsub11
+echo "${SUBSUB11_VAR}"
