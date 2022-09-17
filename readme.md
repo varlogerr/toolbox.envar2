@@ -84,7 +84,7 @@ With the default sourcing of `source.bash` file 2 things happen:
 1. `envar` alias function is loaded
 1. `/etc/envar/init.d` and `~/.envar/init.d` directories are sourced if they exist
 
-To disable this extras pass `--no-initd` to the source file to disable sourcing of `envar.d` directories and `--no-alias` to disable `envar` alias function.
+To disable this extras pass `--no-initd` to the source file to disable sourcing of `init.d` directories and `--no-alias` to disable `envar` alias function.
 
 ```sh
 # File: ~/.bashrc
@@ -110,6 +110,7 @@ ENVAR_ALIAS_ENABLED=false
 
 * `ENVAR_INITD_PATH`, `--initd-path` (defaults to `~/.envar/init.d`) changes user init.d directory location
 * `ENVAR_SPACE_PATH`, `--space-path` (defaults to `~/.envar/spaces`) changes spaces directory
+* `ENVAR_INFO_LEVEL` (`none`, `major`, `minor`) info logging level, defaults to `major`
 
 
 ```sh
@@ -136,20 +137,6 @@ ENVAR_SPACE_PATH="${HOME}/.my-envar-space-directory"
 
 ## Thoughts / TODOs
 
-* ```sh
-  # Outputs:
-  # ENVAR_NAME=test1
-  cat test1.env
-  # Changes prompt to:
-  # {old_prompt} @ test1 >
-  envar . ./test1.env
-  # Dispite explicit `ENVAR_NAME`, prompt is still:
-  # {old_prompt} @ test1 >
-  ENVAR_NAME=test2 envar .
-  ```
-
-  This is happening because for new environments previously loaded files are still implicitly loaded. So for `ENVAR_NAME=test2 envar .` we first provide a new environment name, but after that implicitly loaded `test1.env` file overrides it. It's obviously not intuitive, but is it correct behaviour?
-* `ENVAR_WARN` and `ENVAR_INFO` to have levels
 * add support for the closest directory in the path `.envar.d/spaces`
 
 [To top]

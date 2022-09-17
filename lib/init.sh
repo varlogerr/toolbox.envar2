@@ -1,5 +1,18 @@
+# @HELP
+# Basic initialization of the tool
+#
+# USAGE
+# =====
+#   envar_init
+# @/HELP
+
+# @DEMO_SPACE
+# ENVAR_DEMO="It's a useless demo space!"
+# echo "${ENVAR_DEMO}"
+# @/DEMO_SPACE
+
 envar_init() {
-  _envar_func_trap_help _envar_init_help "${@}" && return $? || {
+  _envar_trap_help_opt _envar_init_help "${@}" && return $? || {
     local rc=$?
     [[ $rc -gt 1 ]] && return $rc
   }
@@ -19,34 +32,27 @@ envar_init() {
 
   local dir; for dir in "${user_dirs[@]}"; do
     mkdir -p "${dir}" 2>/dev/null \
-      && _envar_func_print_info "Created: ${dir}" \
-      || _envar_func_print_warn "Failed creating: ${dir}"
+      && _envar_log_info "Created: ${dir}" \
+      || _envar_log_warn "Failed creating: ${dir}"
   done
 
   local file; for file in "${user_spaces[@]}"; do
     [[ -f "${file}" ]] && continue
     _envar_init_get_space \
     | tee "${file}" >/dev/null 2>&1 \
-      && _envar_func_print_info "Created: ${file}" \
-      || _envar_func_print_warn "Failed creating: ${file}"
+      && _envar_log_info "Created: ${file}" \
+      || _envar_log_warn "Failed creating: ${file}"
   done
 }
 
 _envar_init_get_space() {
-  _envar_func_print "
-    ENVAR_DEMO=\"It's a useless demo space!\"
-    echo \"\${ENVAR_DEMO}\"
-  "
+  _envar_comment_tag_get DEMO_SPACE "${BASH_SOURCE[@]}" \
+  | _envar_tag_comment_strip_filter
 }
 
 _envar_init_help() {
-  _envar_func_print "
-    Basic initialization of the tool
-   .
-    USAGE
-    =====
-    envar_init
-  "
+  _envar_comment_tag_get HELP "${BASH_SOURCE[@]}" \
+  | _envar_tag_comment_strip_filter
 }
 
 _envar_init_parse_opts() {
@@ -56,11 +62,7 @@ _envar_init_parse_opts() {
   local -a _inval
   while :; do
     [[ -n "${1+x}" ]] || break
-
-    case "${1}" in
-      * ) _inval+=("${1}") ;;
-    esac
-
+    _inval+=("${1}")
     shift
   done
 
@@ -73,7 +75,7 @@ _envar_init_parse_opts() {
   }
 
   [[ ${#_errbag[@]} -lt 1 ]] || {
-    _envar_func_print_err "${_errbag[@]}"
+    _envar_log_err "${_errbag[@]}"
     return 1
   }
 }

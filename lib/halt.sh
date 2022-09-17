@@ -1,5 +1,9 @@
+# @HELP
+# Leave all desks
+# @/HELP
+
 envar_halt() {
-  _envar_func_trap_help _envar_halt_help "${@}" && return $? || {
+  _envar_trap_help_opt _envar_halt_help "${@}" && return $? || {
     local rc=$?
     [[ $rc -gt 1 ]] && return $rc
   }
@@ -11,7 +15,8 @@ envar_halt() {
 }
 
 _envar_halt_help() {
-  _envar_func_print 'Leave all desks'
+  _envar_comment_tag_get HELP "${BASH_SOURCE[@]}" \
+  | _envar_tag_comment_strip_filter
 }
 
 _envar_halt_parse_opts() {
@@ -21,11 +26,7 @@ _envar_halt_parse_opts() {
   local -a _inval
   while :; do
     [[ -n "${1+x}" ]] || break
-
-    case "${1}" in
-      * ) _inval+=("${1}") ;;
-    esac
-
+    _inval+=("${1}")
     shift
   done
 
@@ -38,7 +39,7 @@ _envar_halt_parse_opts() {
   }
 
   [[ ${#_errbag[@]} -lt 1 ]] || {
-    _envar_func_print_err "${_errbag[@]}"
+    _envar_log_err "${_errbag[@]}"
     return 1
   }
 }

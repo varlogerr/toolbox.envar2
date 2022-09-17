@@ -1,5 +1,9 @@
+# @HELP
+# Print all loaded files
+# @/HELP
+
 envar_files() {
-  _envar_func_trap_help _envar_files_help "${@}" && return $? || {
+  _envar_trap_help_opt _envar_files_help "${@}" && return $? || {
     local rc=$?
     [[ $rc -gt 1 ]] && return $rc
   }
@@ -17,12 +21,13 @@ _envar_files_push() {
   new_files="$(tac <<< "${new_files}")"
   old_files="$(envar_files)"
   _envar_var_set FILES "$(
-    _envar_func_uniq <<< "${new_files}${old_files:+$'\n'${old_files}}"
+    _envar_uniq_ordered <<< "${new_files}${old_files:+$'\n'${old_files}}"
   )"
 }
 
 _envar_files_help() {
-  _envar_func_print 'Print all loaded files'
+  _envar_comment_tag_get HELP "${BASH_SOURCE[@]}" \
+  | _envar_tag_comment_strip_filter
 }
 
 _envar_files_parse_opts() {
@@ -32,11 +37,7 @@ _envar_files_parse_opts() {
   local -a _inval
   while :; do
     [[ -n "${1+x}" ]] || break
-
-    case "${1}" in
-      * ) _inval+=("${1}") ;;
-    esac
-
+    _inval+=("${1}")
     shift
   done
 
@@ -49,7 +50,7 @@ _envar_files_parse_opts() {
   }
 
   [[ ${#_errbag[@]} -lt 1 ]] || {
-    _envar_func_print_err "${_errbag[@]}"
+    _envar_log_err "${_errbag[@]}"
     return 1
   }
 }

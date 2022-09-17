@@ -1,5 +1,21 @@
+# @HELP
+# Print desks stack
+#
+# USAGE
+# =====
+#   envar_stack [-q] [-f]
+#
+# OPTIONS
+# =======
+# -f, --files   Print only files. Incompatible with `-q`
+# -q, --quiet   Print only desk names. Incompatible with `-f`
+# --notab       Remove prefix before file paths. Automatically
+#               applied with `-f`
+# @/HELP
+
+
 envar_stack() {
-  _envar_func_trap_help _envar_stack_help "${@}" && return $? || {
+  _envar_trap_help_opt _envar_stack_help "${@}" && return $? || {
     local rc=$?
     [[ $rc -gt 1 ]] && return $rc
   }
@@ -17,7 +33,7 @@ envar_stack() {
     && filter2=(grep '^@')
   ${OPTS[files]} \
     && filter2=(grep -v '^@') \
-    && filter3=(_envar_func_uniq)
+    && filter3=(_envar_uniq_ordered)
 
   local stack
   stack="$(_envar_var_get STACK)" || return $?
@@ -62,27 +78,15 @@ _envar_stack_push() {
 
     [[ -n "${envname}" ]] && head_title="@${envname}"
 
-    head_body="$(_envar_func_uniq <<< "${files:+${files}$'\n'}${head_body}")"
+    head_body="$(_envar_uniq_ordered <<< "${files:+${files}$'\n'}${head_body}")"
   fi
 
   _envar_var_set STACK "${head_title}${head_body:+$'\n'${head_body}}${tail:+$'\n'${tail}}"
 }
 
 _envar_stack_help() {
-  _envar_func_print '
-    Print desks stack
-   .
-    USAGE
-    =====
-    envar_stack [-q] [-f]
-   .
-    OPTIONS
-    =======
-    -f, --files   Print only files. Incompatible with `-q`
-    -q, --quiet   Print only desk names. Incompatible with `-f`
-    --notab       Remove prefix before file paths. Automatically
-   .              applied with `-f`
-  '
+  _envar_comment_tag_get HELP "${BASH_SOURCE[@]}" \
+  | _envar_tag_comment_strip_filter
 }
 
 _envar_stack_parse_opts() {
@@ -122,7 +126,7 @@ _envar_stack_parse_opts() {
   }
 
   [[ ${#_errbag[@]} -lt 1 ]] || {
-    _envar_func_print_err "${_errbag[@]}"
+    _envar_log_err "${_errbag[@]}"
     return 1
   }
 }
