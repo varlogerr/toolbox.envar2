@@ -30,9 +30,14 @@ _iife_bootstrap() {
 
   _envar_profiler_init
 
-  # defaults
+  #
+  # DEFAULTS
+  #
   ENVAR_PS1_TEMPLATE="${ENVAR_PS1_TEMPLATE-"{{ ps1 }}@ {{ name }} > "}"
   ENVAR_INFO_LEVEL="${ENVAR_INFO_LEVEL-major}"
+  # sysdirs defaults
+  ENVAR_INITD_ENABLED="${ENVAR_INITD_ENABLED-true}"
+  ENVAR_INITD_PATH="${ENVAR_INITD_PATH-$(printf -- '%s' ~/.envar/init.d)}"
 
   # the only way to get to this point is either through desk mode
   # subrequest or with initial bootstrap instantiation from shell.

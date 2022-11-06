@@ -1,9 +1,6 @@
 _iife_initd() {
   unset _iife_initd
 
-  ENVAR_INITD_ENABLED="${ENVAR_INITD_ENABLED-true}"
-  ENVAR_INITD_PATH="${ENVAR_INITD_PATH-$(printf -- '%s' ~/.envar/init.d)}"
-
   while :; do
     [[ -n "${1+x}" ]] || break
     case "${1}" in
