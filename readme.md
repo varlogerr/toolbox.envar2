@@ -2,6 +2,17 @@
 
 A set of tools to load environments from files.
 
+Inspired by:
+* [direnv](https://github.com/direnv/direnv)
+* [desk](https://github.com/jamesob/desk)
+
+Unfortunately both these great tools don't satisfy my needs.
+
+## Contents
+
+* [Disclaimer](#disclaimer)
+* [Features](#features)
+* [Supported platforms](#supported-platforms)
 * [Quick demo](#quick-demo)
 * [Installation](#installation)
 * [Usage](#usage)
@@ -9,6 +20,26 @@ A set of tools to load environments from files.
 * [More configurations](#more-configurations)
 * [Thoughts / TODOs](#thoughts--todos)
 * [Development](#development)
+
+## Disclaimer
+
+* I am not a bash / Linux expert. Just a user with a bit above average knowledge
+* Will be glad if somebody finds envar useful, but in the first place it's created for my own needs 
+* Enabling envar slows down bash loading. It's a side effect of the structure used for keeping envar state
+
+## Features
+
+* File-based environment import
+* Directory-based environment import. If you load a directory, all `*.sh` and `*.env` files from it are loaded
+* Spaces. Similar to desks from [`desk`](https://github.com/jamesob/desk) tool
+* Environment naming. PS1 is changed according to the current environment name (can be set inside environment files with `ENVAR_NAME` variable or with envar `-n` option)
+* Nested environments. Environment file can source other environments. In this case nested environments are not treated as normal ones (see comments in `envar gen` demo file)
+
+## Supported platforms
+
+Linux + bash. The tool is not tested in other platforms and unlikely to work with other shells (yes, I am bashist).
+
+Envar relies on a very standard set of tools (`grep`, `sed`, `cut`, ...) that normally comes pre-installed with any desktop / server linux distribution.
 
 ## Quick demo
 
