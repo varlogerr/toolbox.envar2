@@ -8,6 +8,11 @@
 #
 # ACTIONS
 # =======
+# {{ short_actions }}
+#
+# DEV FEATURES
+# ============
+# {{ help_dev }}
 # @/HELP
 
 # @HELP_DEV
@@ -42,9 +47,36 @@ _envar_short_actions() {
 }
 
 _envar_help() {
-  _envar_comment_tag_get HELP "${BASH_SOURCE[@]}" \
-  | _envar_tag_comment_strip_filter
-  _envar_short_actions
+  local short_actions; short_actions="$(_envar_short_actions)"
+  local help_dev; help_dev="$(_envar_help_dev)"
+  local help_msg; help_msg="$(
+    _envar_comment_tag_get HELP "${BASH_SOURCE[@]}" \
+    | _envar_tag_comment_strip_filter
+  )"
+
+  local short_actions_line; short_actions_line="$(
+    grep -n '^{{\s*short_actions\s*}}\s*$' <<< "${help_msg}" \
+    | head -n 1 | cut -d: -f1
+  )"
+
+  help_msg="$(
+    printf -- '%s\n' "${help_msg}" | head -n $(( short_actions_line - 1 ))
+    printf -- '%s\n' "${short_actions}"
+    printf -- '%s\n' "${help_msg}" | sed -n "$(( short_actions_line + 1 ))"',$p'
+  )"
+
+  local help_dev_line; help_dev_line="$(
+    grep -n '^{{\s*help_dev\s*}}\s*$' <<< "${help_msg}" \
+    | head -n 1 | cut -d: -f1
+  )"
+
+  help_msg="$(
+    printf -- '%s\n' "${help_msg}" | head -n $(( help_dev_line - 1 ))
+    printf -- '%s\n' "${help_dev}"
+    printf -- '%s\n' "${help_msg}" | sed -n "$(( help_dev_line + 1 ))"',$p'
+  )"
+
+  printf -- '%s\n' "${help_msg}"
 }
 
 _envar_help_dev() {

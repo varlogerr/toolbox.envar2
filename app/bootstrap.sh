@@ -33,7 +33,7 @@ _iife_bootstrap() {
   #
   # DEFAULTS
   #
-  ENVAR_PS1_TEMPLATE="${ENVAR_PS1_TEMPLATE-"{{ ps1 }}@ {{ name }} > "}"
+  ENVAR_PS1_TEMPLATE="${ENVAR_PS1_TEMPLATE-"{{ ps1 }}@{{ name }} > "}"
   ENVAR_INFO_LEVEL="${ENVAR_INFO_LEVEL-major}"
   # sysdirs defaults
   ENVAR_INITD_ENABLED="${ENVAR_INITD_ENABLED-true}"

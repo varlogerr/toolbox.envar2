@@ -35,23 +35,29 @@
 # #   * sub-environment is forced to deskless mode
 # #   * `-n` option is not applicable for sub-environment
 #
-# # Create a variable only visible in the current file. `declare`
-# # can also be used instead of `local`
-# local curdir="$(dirname "${BASH_SOURCE[0]}")"
 #
-# # Configure env name and PS1 template
-# ENVAR_NAME="$(basename "$(pwd)")"
-# ENVAR_PS1_TEMPLATE='{{ ps1-template }}'
+# # # Create a variable only visible in the current file.
+# # # `local` can also be used instead of `declare`
+# # declare CURDIR; CURDIR="$(realpath -- "$(dirname -- "${BASH_SOURCE[0]}")")"
 #
-# # Create a nice environment
-# MEANING_OF_LIFE=69
+# # # Extend environment by sourcing another
+# # # environment file if it exists
+# # envar_source -- "${CURDIR}/another.env"
 #
-# reverse_meaning_of_life() {
-#   echo "${MEANING_OF_LIFE: -1}${MEANING_OF_LIFE:0:1}"
-# }
+# # # Configure env name
+# # ENVAR_NAME="$(basename -- "$(pwd)")"
 #
-# # Uncomment sourcing another environment if it exists
-# #envar_source "${curdir}/another.env"
+# # # Configure PS1 template
+# # ENVAR_PS1_TEMPLATE='{{ ps1-template }}'
+#
+# # # Create a nice environment
+# # {
+# #   MEANING_OF_LIFE=69
+# #
+# #   reverse_meaning_of_life() {
+# #     echo "${MEANING_OF_LIFE: -1}${MEANING_OF_LIFE:0:1}"
+# #   }
+# # }
 # @/SAMPLE
 
 envar_gen() {

@@ -257,11 +257,13 @@
   # remove blank and space only lines
   _envar_text_rmblank() {
     _envar_print_stdout "${@}" | grep -vx '\s*'
+    return 0
   }
 
   # apply trim and rmblank
   _envar_text_clean() {
     _envar_text_trim "${@}" | _envar_text_rmblank
+    return 0
   }
 
   # Decoreate text:
